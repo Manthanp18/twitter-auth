@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import Head from 'next/head'
-import Image from 'next/image'
-import { signIn, signOut, useSession, getSession } from 'next-auth/client';
+import { useState } from "react";
+import Head from "next/head";
+import Image from "next/image";
+import { signIn, signOut, useSession, getSession } from "next-auth/client";
 
-import styles from '../styles/Home.module.css'
+import styles from "../styles/Home.module.css";
 
 export default function Home({ session }) {
   const [statuses, setStatuses] = useState();
@@ -12,32 +12,44 @@ export default function Home({ session }) {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    const query = formData.get('query');
+    const query = formData.get("query");
 
-    const results = await fetch('/api/twitter/search', {
-      method: 'POST',
+    const results = await fetch("/api/twitter/search", {
+      method: "POST",
       body: JSON.stringify({
-        query
-      })
-    }).then(res => res.json());
+        query,
+      }),
+    }).then((res) => res.json());
 
     setStatuses(results.data);
+  }
+
+  async function handleOnTweetThread(e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const thread = formData.get("thread");
+
+    const result = await fetch("/api/twitter/thread", {
+      method: "POST",
+      body: JSON.stringify({ thread }),
+    }).then((res) => res.json());
   }
 
   async function handleOnTweetSubmit(e) {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    const status = formData.get('status');
+    const status = formData.get("status");
 
-    const results = await fetch('/api/twitter/tweet', {
-      method: 'POST',
+    const results = await fetch("/api/twitter/tweet", {
+      method: "POST",
       body: JSON.stringify({
-        status
-      })
-    }).then(res => res.json());
+        status,
+      }),
+    }).then((res) => res.json());
 
-    alert('Success!')
+    alert("Success!");
   }
 
   return (
@@ -50,24 +62,34 @@ export default function Home({ session }) {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome { session ? session.user.name : 'to Next.js' }
+          Welcome {session ? session.user.name : "to Next.js"}
         </h1>
 
         <p className={styles.description}>
-          {!session && <>
-            Not signed in <br/>
-            <button onClick={() => signIn()}>Sign in</button>
-          </>}
-          {session && <>
-            Signed in as {session.user.email} <br/>
-            <button onClick={() => signOut()}>Sign out</button>
-          </>}
+          {!session && (
+            <>
+              Not signed in <br />
+              <button onClick={() => signIn()}>Sign in</button>
+            </>
+          )}
+          {session && (
+            <>
+              Signed in as {session.user.email} <br />
+              <button onClick={() => signOut()}>Sign out</button>
+            </>
+          )}
         </p>
 
         <div>
           <form onSubmit={handleOnTweetSubmit}>
             <h2>Tweet</h2>
             <textarea name="status" />
+            <button>Tweet</button>
+          </form>
+
+          <form onSubmit={handleOnTweetThread}>
+            <h2>Tweet thread</h2>
+            <textarea name="thread" />
             <button>Tweet</button>
           </form>
 
@@ -79,11 +101,13 @@ export default function Home({ session }) {
 
           {statuses && (
             <ul>
-              { statuses.map(({ id, text, user }) => {
+              {statuses.map(({ id, text, user }) => {
                 return (
                   <li key={id}>
-                    <p>{ text }</p>
-                    <p>By { user.name } ({ user.screen_name })</p>
+                    <p>{text}</p>
+                    <p>
+                      By {user.name} ({user.screen_name})
+                    </p>
                   </li>
                 );
               })}
@@ -98,21 +122,21 @@ export default function Home({ session }) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
   return {
     props: {
-      session
-    }
-  }
+      session,
+    },
+  };
 }
