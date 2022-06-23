@@ -1,0 +1,37 @@
+import Twitter from "twitter-lite";
+import { getSession } from "next-auth/client";
+import { getToken } from "next-auth/jwt";
+
+export default async (req, res) => {
+  const body = JSON.parse(req.body);
+
+
+  const session = await getSession({ req });
+  console.log("session", session);
+
+  const token = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+  //AAAAAAAAAAAAAAAAAAAAABYjeAEAAAAAsXVFq6PDnawg%2BhoKxKnCiklNnfo%3DengvqsAudwSDFzvPKovI7DbwDJ8OPgTKj2870GuGaVyWejQFxC
+  const client = new Twitter({
+    subdomain: "api",
+    consumer_key: process.env.TWITTER_CONSUMER_KEY,
+    consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+    access_token_key: token.twitter.accessToken,
+    access_token_secret: token.twitter.refreshToken,
+  });
+
+  try {
+    const results = await client.get("/2/tweets/:1539753836038213632/liking_users", {
+    });
+    return res.status(200).json({
+      status: "Ok",
+      data: results.statuses,
+    });
+  } catch (e) {
+    return res.status(400).json({
+      status: e.message,
+    });
+  }
+};

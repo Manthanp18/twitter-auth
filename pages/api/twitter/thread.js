@@ -3,8 +3,13 @@ import { getSession } from "next-auth/client";
 import { getToken } from "next-auth/jwt";
 
 export default async (req, res) => {
-  const body = JSON.parse(req.body);
-  const { status } = body;
+  // const body = JSON.parse(req.body);
+  console.log(req.body);
+
+  let thread=[]
+
+  const array = req.body.forEach((item)=>thread.push(item.bucketitem))
+   console.log(thread)
 
   const session = await getSession({ req });
   const token = await getToken({
@@ -30,6 +35,6 @@ export default async (req, res) => {
       lastTweetID = tweet.id_str;
     }
   }
-  const thread = ["First tweet", "Second tweet", "Third tweet"];
+  // const thread = ["First tweet", "Second tweet", "Third tweet"];
   tweetThread(thread).catch(console.error);
 };
