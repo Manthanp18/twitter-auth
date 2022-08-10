@@ -1,29 +1,31 @@
-import NextAuth from 'next-auth';
-import Providers from 'next-auth/providers';
+import NextAuth from "next-auth";
+import Providers from "next-auth/providers";
 
 export default NextAuth({
   providers: [
     Providers.Twitter({
       clientId: process.env.TWITTER_CONSUMER_KEY,
-      clientSecret: process.env.TWITTER_CONSUMER_SECRET
-    })
+      clientSecret: process.env.TWITTER_CONSUMER_SECRET,
+    }),
   ],
   callbacks: {
-    async jwt(token, user, account = {}, profile, isNewUser) {
-      if ( account.provider && !token[account.provider] ) {
+    async jwt(token, user, account = {}, profile, isNewUser, id) {
+      // console.log(token);
+
+      if (account.provider && !token[account.provider]) {
         token[account.provider] = {};
       }
 
-      if ( account.accessToken ) {
+      if (account.accessToken) {
         token[account.provider].accessToken = account.accessToken;
       }
 
-      if ( account.refreshToken ) {
+      if (account.refreshToken) {
         token[account.provider].refreshToken = account.refreshToken;
       }
 
       return token;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET
+  secret: process.env.NEXTAUTH_SECRET,
 });

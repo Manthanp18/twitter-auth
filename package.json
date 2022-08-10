@@ -9,10 +9,21 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
+    "cron": "^2.0.0",
+    "dotenv": "^16.0.1",
+    "mongodb": "^3.7.3",
+    "mongoose": "^6.4.0",
     "next": "11.0.1",
     "next-auth": "^3.27.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-modal": "^3.15.1",
+    "react-responsive-modal": "^6.2.0",
     "twitter-lite": "^1.1.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.8",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.1.7"
   }
 }

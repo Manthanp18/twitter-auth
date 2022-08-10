@@ -4,12 +4,12 @@ import { getToken } from "next-auth/jwt";
 
 export default async (req, res) => {
   // const body = JSON.parse(req.body);
-  console.log(req.body);
+  //   console.log(req.body);
 
-  let thread=[]
+  let thread = [];
 
-  const array = req.body.forEach((item)=>thread.push(item.bucketitem))
-   console.log(thread)
+  const array = req.body.forEach((item) => thread.push(item.bucketitem));
+  //   console.log(thread);
 
   const session = await getSession({ req });
   const token = await getToken({
