@@ -84,9 +84,7 @@ export default function Home({ session }) {
         <p>
           {session && (
             <>
-              <Dashboard />
-              Signed in as {session.user.email} <br />
-              <button onClick={() => signOut()}>Sign out</button>
+              <Dashboard session={session} />
             </>
           )}
         </p>

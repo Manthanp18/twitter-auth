@@ -6,7 +6,7 @@ import { signIn, signOut, useSession, getSession } from "next-auth/client";
 
 import axios from "axios";
 import { useRouter } from "next/router";
-function dashboard() {
+function dashboard(session) {
   const [statuses, setStatuses] = useState();
   const [formValues, setFormValues] = useState([{ bucketitem: "" }]);
 
@@ -44,15 +44,18 @@ function dashboard() {
 
   return (
     <div>
-      <div>
+      <div className="flex flex-col mx-96 h-screen">
         <form onSubmit={handleSubmit}>
-          <h2>Tweet Thread Working</h2>
+          <h2 className="mt-10 text-2xl px-40 tracking-widest mb-9">
+            Tweet Thread Working
+          </h2>
           {formValues.map((element, index) => (
-            <div key={index}>
+            <div>
               {/* <label>Bucket Item</label> */}
-              <input
+              <textarea
+                className="border-b-2 block h-32 w-full my-1 text-lg outline-none"
                 placeholder="Enter your bucketlist item"
-                type="text"
+                type="textarea"
                 name="bucketitem"
                 value={element.bucketitem || ""}
                 onChange={(e) => handleChange(index, e)}
@@ -72,6 +75,8 @@ function dashboard() {
             <button type="submit">Submit</button>
           </div>
         </form>
+
+        <button onClick={() => signOut()}>Sign out</button>
       </div>
     </div>
   );
